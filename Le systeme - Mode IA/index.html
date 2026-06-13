@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Le Système - Solo Leveling IRL</title>
+    <style>
+        /* Importation d'une police futuriste/gaming */
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&display=swap');
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #02050a;
+            color: #ffffff;
+            font-family: 'Rajdhani', sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 15px;
+            background-image:
+                radial-gradient(at 50% 50%, rgba(6, 28, 59, 0.4) 0px, transparent 50%),
+                linear-gradient(0deg, #010307 0%, #040914 100%);
+            background-attachment: fixed;
+        }
+
+        /* Fenêtre principale fluide (PC & Mobile) */
+        .system-window {
+            position: relative;
+            background: rgba(4, 14, 28, 0.85);
+            border: 2px solid #00d8ff;
+            width: 100%;
+            max-width: 480px;
+            padding: 0;
+            border-radius: 4px;
+            box-shadow:
+                0 0 30px rgba(0, 216, 255, 0.15),
+                inset 0 0 15px rgba(0, 216, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        @media (min-width: 400px) {
+            .system-window {
+                clip-path: polygon(0 0, 100% 0, 100% calc(100% - 20px), calc(100% - 20px) 100%, 0 100%);
+            }
+        }
+
+        .system-window::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 15px;
+            height: 15px;
+            border-top: 3px solid #00d8ff;
+            border-left: 3px solid #00d8ff;
+            pointer-events: none;
+        }
+
+        .header {
+            font-family: 'Orbitron', sans-serif;
+            background: linear-gradient(90deg, rgba(0, 216, 255, 0.2) 0%, rgba(0, 216, 255, 0) 100%);
+            border-bottom: 2px solid #00d8ff;
+            padding: 15px 20px;
+            color: #00d8ff;
+            font-weight: 900;
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(0, 216, 255, 0.6);
+            text-transform: uppercase;
+        }
+
+        .content-padding {
+            padding: 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        @media (min-width: 380px) {
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .stat-line {
+            border-bottom: 1px solid rgba(0, 216, 255, 0.15);
+            padding-bottom: 5px;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-value {
+            font-weight: 700;
+            color: #ffffff;
+            word-break: break-word;
+        }
+
+        .attributes-section {
+            background: rgba(0, 20, 40, 0.5);
+            border: 1px solid rgba(0, 216, 255, 0.2);
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+
+        .attributes-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            color: #00d8ff;
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        @media (min-width: 360px) {
+            .attributes-title {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+
+        .attribute-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 8px 0;
+            font-size: 1.05rem;
+        }
+
+        .attr-btn {
+            background: rgba(0, 216, 255, 0.15);
+            border: 1px solid #00d8ff;
+            color: #00d8ff;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            cursor: pointer;
+            padding: 6px 14px;
+            font-size: 1rem;
+            border-radius: 3px;
+            display: none;
+            touch-action: manipulation;
+        }
+
+        .attr-btn:hover {
+            background: #00d8ff;
+            color: #000;
+        }
+
+        .quest-box {
+            border: 1px solid rgba(0, 216, 255, 0.25);
+            background: rgba(0, 30, 60, 0.2);
+            padding: 15px;
+            border-radius: 4px;
+        }
+
+        .quest-box-title {
+            font-family: 'Orbitron', sans-serif;
+            color: #00d8ff;
+            font-weight: 700;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            text-shadow: 0 0 5px rgba(0, 216, 255, 0.4);
+            line-height: 1.3;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        li {
+            position: relative;
+            padding-left: 20px;
+            margin: 12px 0;
+            font-size: 1.05rem;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.4;
+        }
+
+        li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 6px;
+            width: 8px;
+            height: 8px;
+            background: #00d8ff;
+            transform: rotate(45deg);
+            box-shadow: 0 0 5px #00d8ff;
+        }
+
+        /* MODE QUÊTE SPÉCIALE (DORÉ) */
+        .special-mode {
+            border-color: #ffaa00 !important;
+            box-shadow:
+                0 0 35px rgba(255, 170, 0, 0.2),
+                inset 0 0 15px rgba(255, 170, 0, 0.05) !important;
+        }
+
+        .special-mode::before {
+            border-top-color: #ffaa00 !important;
+            border-left-color: #ffaa00 !important;
+        }
+
+        .special-mode .header {
+            background: linear-gradient(90deg, rgba(255, 170, 0, 0.2) 0%, rgba(255, 170, 0, 0) 100%) !important;
+            border-bottom-color: #ffaa00 !important;
+            color: #ffaa00 !important;
+            text-shadow: 0 0 10px rgba(255, 170, 0, 0.6) !important;
+        }
+
+        .special-mode .quest-box {
+            border-color: rgba(255, 170, 0, 0.35) !important;
+            background: rgba(45, 30, 0, 0.2) !important;
+        }
+
+        .special-mode .quest-box-title {
+            color: #ffaa00 !important;
+            text-shadow: 0 0 5px rgba(255, 170, 0, 0.4) !important;
+        }
+
+        .special-mode li::before {
+            background: #ffaa00 !important;
+            box-shadow: 0 0 5px #ffaa00 !important;
+        }
+
+        .btn-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        @media (min-width: 360px) {
+            .btn-container {
+                flex-direction: row;
+            }
+        }
+
+        .btn {
+            flex: 1;
+            padding: 14px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            background: transparent;
+            border: 1px solid #00d8ff;
+            color: #00d8ff;
+            cursor: pointer;
+            letter-spacing: 1px;
+            font-size: 0.85rem;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            touch-action: manipulation;
+        }
+
+        .btn:disabled {
+            border-color: #445566 !important;
+            color: #445566 !important;
+            cursor: not-allowed;
+            box-shadow: none !important;
+            background: transparent !important;
+        }
+
+        .btn:hover:not(:disabled) {
+            background: rgba(0, 216, 255, 0.15);
+            box-shadow: 0 0 15px rgba(0, 216, 255, 0.2);
+        }
+
+        .btn-fail {
+            border-color: #ff3366;
+            color: #ff3366;
+        }
+
+        .btn-fail:hover:not(:disabled) {
+            background: rgba(255, 51, 102, 0.15);
+            box-shadow: 0 0 15px rgba(255, 51, 102, 0.2);
+        }
+
+        .special-mode .btn-complete {
+            border-color: #ffaa00 !important;
+            color: #ffaa00 !important;
+        }
+
+        .special-mode .btn-complete:hover:not(:disabled) {
+            background: rgba(255, 170, 0, 0.15) !important;
+            box-shadow: 0 0 15px rgba(255, 170, 0, 0.25) !important;
+        }
+
+        .setup-screen {
+            text-align: center;
+            padding: 20px 15px;
+        }
+
+        .setup-text {
+            margin: 25px 0;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+            line-height: 1.4;
+        }
+
+        .class-btn {
+            background: rgba(0, 216, 255, 0.03);
+            border: 1px solid rgba(0, 216, 255, 0.3);
+            color: #ffffff;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            padding: 14px;
+            margin: 10px 0;
+            width: 100%;
+            cursor: pointer;
+            text-align: left;
+            padding-left: 15px;
+            border-radius: 4px;
+            transition: 0.2s;
+            touch-action: manipulation;
+        }
+
+        .class-btn:hover {
+            border-color: #00d8ff;
+            background: rgba(0, 216, 255, 0.1);
+        }
+
+        .reset-link {
+            margin: 25px 0 10px 0;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.25);
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: color 0.2s;
+            padding: 5px;
+        }
+
+        .reset-link:hover {
+            color: #ff3366;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translate(0, 0);
+            }
+
+            20%,
+            60% {
+                transform: translate(-4px, 2px);
+            }
+
+            40%,
+            80% {
+                transform: translate(4px, -2px);
+            }
+        }
+
+        @keyframes levelUpFlash {
+            0% {
+                box-shadow: 0 0 40px #00ffaa;
+                border-color: #00ffaa;
+            }
+
+            100% {
+                box-shadow: 0 0 30px rgba(0, 216, 255, 0.15);
+                border-color: #00d8ff;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="system-window" id="system-window">
+        <div id="setup-screen" class="setup-screen">
+            <div class="header">SÉLECTION DE CLASSE</div>
+            <p class="setup-text">Le Système a détecté un nouvel Éveillé. Choisissez votre voie :</p>
+            <button class="class-btn" onclick="choisirClasse('Combattant')">⚔️ COMBATTANT (Force & Endurance)</button>
+            <button class="class-btn" onclick="choisirClasse('Mage')">🔮 MAGE (Esprit, Études & Focus)</button>
+            <button class="class-btn" onclick="choisirClasse('Assassin')">🥷 ASSASSIN (Discipline &
+                Productivité)</button>
+        </div>
+
+        <div id="main-screen" style="display: none;">
+            <div class="header" id="window-header">FENÊTRE DU STATUT</div>
+
+            <div class="content-padding">
+                <div class="stats-grid">
+                    <div class="stat-line">
+                        <div class="stat-label">Nom / Classe</div>
+                        <div class="stat-value" id="player-class">-</div>
+                    </div>
+                    <div class="stat-line">
+                        <div class="stat-label">Titre Actuel</div>
+                        <div class="stat-value" id="player-title" style="color: #ffaa00;">Aucun</div>
+                    </div>
+                    <div class="stat-line">
+                        <div class="stat-label">Niveau</div>
+                        <div class="stat-value" id="player-level">1</div>
+                    </div>
+                    <div class="stat-line">
+                        <div class="stat-label">Expérience</div>
+                        <div class="stat-value"><span id="player-xp">0</span> / <span id="player-xp-needed">100</span>
+                            XP</div>
+                    </div>
+                </div>
+
+                <div class="attributes-section">
+                    <div class="attributes-title">
+                        <span>ATTRIBUTS DU JOUEUR</span>
+                        <span id="stat-points" style="color: #00ffaa; font-weight: bold;">Points disponibles : 0</span>
+                    </div>
+                    <div class="attribute-row">
+                        <span>💪 FORCE : <span id="stat-str" style="font-weight: bold;">10</span></span>
+                        <button class="attr-btn" id="btn-str" onclick="attribuerPoint('str')">+</button>
+                    </div>
+                    <div class="attribute-row">
+                        <span>⚡ AGILITÉ : <span id="stat-agi" style="font-weight: bold;">10</span></span>
+                        <button class="attr-btn" id="btn-agi" onclick="attribuerPoint('agi')">+</button>
+                    </div>
+                    <div class="attribute-row">
+                        <span>🧠 INTELLIGENCE : <span id="stat-int" style="font-weight: bold;">10</span></span>
+                        <button class="attr-btn" id="btn-int" onclick="attribuerPoint('int')">+</button>
+                    </div>
+                </div>
+
+                <div class="quest-box">
+                    <div class="quest-box-title" id="quest-box-title">QUÊTE QUOTIDENNE</div>
+                    <ul id="quest-list"></ul>
+                </div>
+
+                <div class="btn-container">
+                    <button class="btn btn-complete" id="action-btn" onclick="validerQuete()">Compléter</button>
+                    <button class="btn btn-fail" id="fail-btn" onclick="echouerQuete()">Échouer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="reset-link" onclick="reinitialiserSysteme()">[ Réinitialiser le Système ]</div>
+
+    <script>
+        const banqueMissions = {
+            Combattant: [
+                { texte: "Faire [X] pompes et [X] abdominaux", base: 20, scaling: 5 },
+                { texte: "Courir ou marcher rapidement pendant [X] minutes", base: 15, scaling: 3 },
+                { texte: "Faire une séance de gainage de [X] secondes", base: 30, scaling: 10 },
+                { texte: "Effectuer [X] squats au poids du corps", base: 30, scaling: 8 }
+            ],
+            Mage: [
+                { texte: "Lire un livre d'apprentissage pendant [X] minutes", base: 15, scaling: 5 },
+                { texte: "Travailler sur un sujet complexe (Deep Work) pendant [X] minutes", base: 30, scaling: 10 },
+                { texte: "Méditer dans le calme complet pendant [X] minutes", base: 5, scaling: 1 },
+                { texte: "Apprendre [X] nouveaux mots (langue étrangère/vocabulaire)", base: 5, scaling: 2 }
+            ],
+            Assassin: [
+                { texte: "Zéro écran pendant les [X] premières minutes du réveil", base: 20, scaling: 5 },
+                { texte: "Nettoyer, ranger ton espace de travail ou faire ton lit immédiatement", base: 1, scaling: 0 },
+                { texte: "Planifier minutieusement ta journée et accomplir la tâche prioritaire", base: 1, scaling: 0 },
+                { texte: "Supprimer [X] minutes de temps d'écran inutile ou réseaux sociaux aujourd'hui", base: 15, scaling: 5 }
+            ]
+        };
+
+        const quetesSpeciales = {
+            5: { titre: "ÉPREUVE DE CHANGEMENT DE CLASSE (RANG D)", objectifs: ["Aucun sucre ni grignotage aujourd'hui", "Marcher 10 000 pas cumulés", "Couper les écrans à 21h30 précises"] },
+            10: { titre: "ÉPREUVE DE CHANGEMENT DE CLASSE (RANG A)", objectifs: ["Prendre une douche froide ce matin", "2 heures de focus total sans distractions", "Doubler l'objectif de ton exercice habituel"] },
+            15: { titre: "ÉPREUVE DE SÉLECTION : L'ÉVEIL DU CHASSEUR", objectifs: ["Se lever dès la première alarme (sans snooze)", "Lire 20 pages d'un livre instructif", "Compléter 45 minutes d'activité physique intense"] },
+            20: { titre: "ÉPREUVE DE TRANSITION : LE SEUIL DES OMBRES", objectifs: ["Jeûne intermittent (sauter un repas ou 16h sans manger)", "Finir toutes les tâches prévues avant 18h", "Zéro distractions/réseaux pendant toute la session de travail"] },
+            25: { titre: "ÉPREUVE FINALE : SUCCESSION DU MONARQUE", objectifs: ["Se lever à 6h00 du matin", "Réaliser 3 heures de travail focalisé (Deep Work)", "Exécuter la routine physique complète de Jinwoo (100 pompes/abdos/squats + 10km)"] }
+        };
+
+        const tableTitres = [
+            { niveauMin: 1, nom: "Chasseur de Rang E" },
+            { niveauMin: 5, nom: "Chasseur de Rang D" },
+            { niveauMin: 10, nom: "Chasseur d'Élite Rang A" },
+            { niveauMin: 15, nom: "Celui qui surmonte tout" },
+            { niveauMin: 20, nom: "Ombre Émergente" },
+            { niveauMin: 25, nom: "Monarque des Ombres" }
+        ];
+
+        let joueur = {
+            classe: localStorage.getItem('sys_class') || null,
+            niveau: parseInt(localStorage.getItem('sys_level')) || 1,
+            xp: parseInt(localStorage.getItem('sys_xp')) || 0,
+            xpNecessaire: parseInt(localStorage.getItem('sys_xp_needed')) || 100,
+            enQueteSpeciale: localStorage.getItem('sys_in_special') === 'true',
+            pointsStat: parseInt(localStorage.getItem('sys_pts')) || 0,
+            str: parseInt(localStorage.getItem('sys_str')) || 10,
+            agi: parseInt(localStorage.getItem('sys_agi')) || 10,
+            int: parseInt(localStorage.getItem('sys_int')) || 10
+        };
+
+        function choisirClasse(classeChoisie) {
+            joueur.classe = classeChoisie;
+            localStorage.setItem('sys_class', classeChoisie);
+            initialiserSysteme();
+        }
+
+        function initialiserSysteme() {
+            if (!joueur.classe) {
+                document.getElementById('setup-screen').style.display = 'block';
+                document.getElementById('main-screen').style.display = 'none';
+                return;
+            }
+            document.getElementById('setup-screen').style.display = 'none';
+            document.getElementById('main-screen').style.display = 'block';
+
+            verifierQueteObligatoire();
+            mettreAJourInterface();
+            verifierDateQuete();
+        }
+
+        function verifierDateQuete() {
+            const derniereDateValidation = localStorage.getItem('sys_last_complete_date');
+            const dateAujourdhui = new Date().toDateString();
+
+            const actionBtn = document.getElementById('action-btn');
+            const failBtn = document.getElementById('fail-btn');
+
+            if (derniereDateValidation === dateAujourdhui) {
+                actionBtn.disabled = true;
+                failBtn.disabled = true;
+                actionBtn.textContent = "Quête Terminée (Reviens demain)";
+            } else {
+                actionBtn.disabled = false;
+                failBtn.disabled = false;
+            }
+        }
+
+        function verifierQueteObligatoire() {
+            const windowEl = document.getElementById('system-window');
+
+            if (quetesSpeciales[joueur.niveau] && !localStorage.getItem('sys_special_done_' + joueur.niveau)) {
+                joueur.enQueteSpeciale = true;
+                localStorage.setItem('sys_in_special', 'true');
+                windowEl.classList.add('special-mode');
+                chargerQueteSpeciale();
+            } else {
+                joueur.enQueteSpeciale = false;
+                localStorage.setItem('sys_in_special', 'false');
+                windowEl.classList.remove('special-mode');
+
+                const dateStockee = localStorage.getItem('sys_date_quetes');
+                const dateAujourdhui = new Date().toDateString();
+
+                if (!localStorage.getItem('sys_quetes_du_jour') || dateStockee !== dateAujourdhui) {
+                    genererQuetesDuJour();
+                } else {
+                    afficherQuetesMissions();
+                }
+            }
+        }
+
+        function chargerQueteSpeciale() {
+            const quete = quetesSpeciales[joueur.niveau];
+            const listeElement = document.getElementById('quest-list');
+            const headerEl = document.getElementById('window-header');
+            const titreBox = document.getElementById('quest-box-title');
+            const actionBtn = document.getElementById('action-btn');
+            const failBtn = document.getElementById('fail-btn');
+
+            headerEl.textContent = "ALERTE : QUÊTE SPÉCIALE";
+            titreBox.textContent = quete.titre;
+
+            const derniereDateValidation = localStorage.getItem('sys_last_complete_date');
+            if (derniereDateValidation !== new Date().toDateString()) {
+                actionBtn.textContent = "Valider l'Épreuve";
+            }
+            failBtn.style.display = "none";
+
+            listeElement.innerHTML = '';
+            quete.objectifs.forEach(obj => {
+                let li = document.createElement('li');
+                li.textContent = obj;
+                listeElement.appendChild(li);
+            });
+        }
+
+        function genererQuetesDuJour() {
+            const headerEl = document.getElementById('window-header');
+            const titreBox = document.getElementById('quest-box-title');
+            const actionBtn = document.getElementById('action-btn');
+            const failBtn = document.getElementById('fail-btn');
+
+            headerEl.textContent = "FENÊTRE DU STATUT";
+            titreBox.textContent = "QUÊTE QUOTIDIENNE : PRÉPARATION POUR DEVENIR PLUS FORT";
+
+            const derniereDateValidation = localStorage.getItem('sys_last_complete_date');
+            if (derniereDateValidation !== new Date().toDateString()) {
+                actionBtn.textContent = "Compléter";
+            }
+            failBtn.style.display = "block";
+
+            const missionsClasse = banqueMissions[joueur.classe];
+            let melangees = [...missionsClasse].sort(() => 0.5 - Math.random());
+            let selection = melangees.slice(0, 3);
+
+            let quetesFormatees = selection.map(mission => {
+                let valeurCalculée = mission.base + (mission.scaling * (joueur.niveau - 1));
+                return mission.texte.replace(/\[X\]/g, valeurCalculée);
+            });
+
+            localStorage.setItem('sys_quetes_du_jour', JSON.stringify(quetesFormatees));
+            localStorage.setItem('sys_date_quetes', new Date().toDateString());
+            afficherQuetesMissions();
+        }
+
+        function afficherQuetesMissions() {
+            const listeElement = document.getElementById('quest-list');
+            listeElement.innerHTML = '';
+            const quetes = JSON.parse(localStorage.getItem('sys_quetes_du_jour'));
+            if (quetes) {
+                quetes.forEach(quete => {
+                    let li = document.createElement('li');
+                    li.textContent = quete;
+                    listeElement.appendChild(li);
+                });
+            }
+        }
+
+        function obtenirTitreApproprie() {
+            let titreActuel = "Aucun";
+            for (let i = 0; i < tableTitres.length; i++) {
+                if (joueur.niveau >= tableTitres[i].niveauMin) {
+                    titreActuel = tableTitres[i].nom;
+                }
+            }
+            return titreActuel;
+        }
+
+        function validerQuete() {
+            if (joueur.enQueteSpeciale) {
+                localStorage.setItem('sys_special_done_' + joueur.niveau, 'true');
+                joueur.xp += joueur.xpNecessaire;
+            } else {
+                joueur.xp += 40 + (joueur.niveau * 10);
+            }
+
+            localStorage.setItem('sys_last_complete_date', new Date().toDateString());
+
+            if (joueur.xp >= joueur.xpNecessaire) {
+                joueur.xp -= joueur.xpNecessaire;
+                joueur.niveau += 1;
+                joueur.pointsStat += 5;
+                joueur.xpNecessaire = Math.floor(joueur.xpNecessaire * 1.4);
+
+                const windowEl = document.getElementById('system-window');
+                windowEl.style.animation = "levelUpFlash 0.8s ease-out";
+                setTimeout(() => windowEl.style.animation = "", 800);
+            }
+
+            verifierQueteObligatoire();
+            mettreAJourInterface();
+            verifierDateQuete();
+        }
+
+        function echouerQuete() {
+            joueur.xp = Math.max(0, joueur.xp - 25);
+            localStorage.setItem('sys_last_complete_date', new Date().toDateString());
+
+            const windowEl = document.getElementById('system-window');
+            windowEl.style.animation = "shake 0.4s ease-in-out";
+            setTimeout(() => windowEl.style.animation = "", 400);
+
+            verifierQueteObligatoire();
+            mettreAJourInterface();
+            verifierDateQuete();
+        }
+
+        function attribuerPoint(stat) {
+            if (joueur.pointsStat > 0) {
+                joueur.pointsStat--;
+                joueur[stat]++;
+                mettreAJourInterface();
+            }
+        }
+
+        function reinitialiserSysteme() {
+            if (confirm("⚠️ Alerte : Voulez-vous effacer TOUTES vos données et réinitialiser votre progression ?")) {
+                localStorage.clear();
+                joueur = { classe: null, niveau: 1, xp: 0, xpNecessaire: 100, enQueteSpeciale: false, pointsStat: 0, str: 10, agi: 10, int: 10 };
+                initialiserSysteme();
+            }
+        }
+
+        function mettreAJourInterface() {
+            document.getElementById('player-class').textContent = joueur.classe;
+            document.getElementById('player-level').textContent = joueur.niveau;
+            document.getElementById('player-xp').textContent = joueur.xp;
+            document.getElementById('player-xp-needed').textContent = joueur.xpNecessaire;
+            document.getElementById('player-title').textContent = obtenirTitreApproprie();
+
+            document.getElementById('stat-points').textContent = `Points disponibles : ${joueur.pointsStat}`;
+            document.getElementById('stat-str').textContent = joueur.str;
+            document.getElementById('stat-agi').textContent = joueur.agi;
+            document.getElementById('stat-int').textContent = joueur.int;
+
+            const displayBtn = joueur.pointsStat > 0 ? "inline-block" : "none";
+            document.getElementById('btn-str').style.display = displayBtn;
+            document.getElementById('btn-agi').style.display = displayBtn;
+            document.getElementById('btn-int').style.display = displayBtn;
+
+            localStorage.setItem('sys_level', joueur.niveau);
+            localStorage.setItem('sys_xp', joueur.xp);
+            localStorage.setItem('sys_xp_needed', joueur.xpNecessaire);
+            localStorage.setItem('sys_pts', joueur.pointsStat);
+            localStorage.setItem('sys_str', joueur.str);
+            localStorage.setItem('sys_agi', joueur.agi);
+            localStorage.setItem('sys_int', joueur.int);
+        }
+
+        initialiserSysteme();
+    </script>
+
+</body>
+
+</html>
